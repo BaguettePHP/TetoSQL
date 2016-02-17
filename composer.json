@@ -1,0 +1,37 @@
+{
+    "name": "zonuexe/tetosql",
+    "description": "Simple and secure SQL templating",
+    "license": "MPL-2.0",
+    "authors": [
+        {
+            "name": "pixiv Inc."
+        },
+        {
+            "name": "USAMI Kenta",
+            "email": "tadsan@zonu.me"
+        }
+    ],
+    "keywords": [
+        "sql"
+    ],
+    "require": {
+    },
+    "require-dev": {
+         "phpunit/phpunit": "~4.8"
+        ,"theseer/phpdox":  "~0.8"
+        ,"satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Teto\\SQL\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Teto\\SQL\\": "tests/"
+        }
+    },
+    "suggest": {
+        "ext-mysql": ""
+    }
+}
