@@ -2,7 +2,7 @@
 /**
  * bootstrap.php
  *
- * @package   Baguette
+ * @package   Teto\SQL
  * @author    USAMI Kenta <tadsan@zonu.me>
  * @copyright 2016 USAMI Kenta
  * @license   https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
