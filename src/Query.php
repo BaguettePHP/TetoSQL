@@ -53,10 +53,11 @@ class Query
      */
     public static function build($pdo, $sql, array $params)
     {
+        $bind_values = [];
         $sql = strtr($sql, "\n", ' ');
         $sql = preg_replace_callback(
             '/'.Query::RE_HOLDER.'/',
-            function ($m) use ($pdo, $params) {
+            function ($m) use ($pdo, $params, &$bind_values) {
                 $key  = $m['key'];
                 $type = $m['type'];
 
@@ -64,15 +65,21 @@ class Query
                     throw new \OutOfRangeException(sprintf('param "%s" expected but not assigned', $key));
                 }
 
-                return self::replaceHolder($pdo, $key, $type, $params[$key]);
+                return self::replaceHolder($pdo, $key, $type, $params[$key], $bind_values);
             },
             $sql
         );
 
-        return $pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
+
+        foreach ($bind_values as $key => list($type, $value)) {
+            $stmt->bindParam($key, $value, $type);
+        }
+
+        return $stmt;
     }
 
-    protected static function replaceHolder($pdo, $key, $type, $value)
+    protected static function replaceHolder($pdo, $key, $type, $value, &$bind_values)
     {
         if ($type === '@ascdesc') {
             if ($value !== 'ASC' && $value !== 'DESC') {
@@ -148,6 +155,15 @@ class Query
                 $value[$i] = $pdo->quote((string)$item, \PDO::PARAM_STR);
             }
             return implode(',', $value);
+        }
+
+        if ($type === '@lob') {
+            if (!is_resource($value)) {
+                throw new \DomainException(sprintf('param "%s" must be resource', $key));
+            }
+            $bind_values[$key] = [\PDO::PARAM_LOB, $value];
+
+            return $key;
         }
 
         if ($type === '') {
