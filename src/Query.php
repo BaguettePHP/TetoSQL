@@ -30,6 +30,21 @@ class Query
     }
 
     /**
+     * Build SQL query and execute
+     *
+     * @param \PDO|PDOInterface|PDOAggregate $pdo
+     * @param string $sql
+     * @param array  $params
+     */
+    public static function executeAndReturnInsertId($pdo, $sql, array $params, $name = null)
+    {
+        $stmt = Query::build(($pdo instanceof PDOAggregate) ? $pdo->getPDO() : $pdo, $sql, $params);
+        $stmt->execute();
+
+        return $pdo->lastInsertId($name);
+    }
+
+    /**
      * Build SQL query
      *
      * @param \PDO|PDOInterface $pdo
