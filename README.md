@@ -1,6 +1,28 @@
 TetoSQL
 =======
 
+[PHP Data Objects](http://php.net/manual/book.pdo.php)(PDO) wrapper and SQL Template for PHP
+
+Features
+--------
+
+- PDO Wrapper
+  - [BLOB support](http://php.net/manual/pdo.lobs.php)
+- Query Template
+  - Type safe
+  - Sequence of values
+
+Syntax
+------
+
+### type
+
+* `@int` - Integer value (`-9223372036854775808 <= n <=9223372036854775807`)
+* `@int[]` - Sequence of integers
+* `@string` - String
+* `@string[]` - Sequence of strings
+* `@lob` - [Large OBject](http://php.net/manual/pdo.lobs.php)
+
 Copyright
 ---------
 

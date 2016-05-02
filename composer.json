@@ -32,6 +32,9 @@
         }
     },
     "suggest": {
-        "ext-mysql": ""
+        "ext-mysql": "MySQL support"
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }
