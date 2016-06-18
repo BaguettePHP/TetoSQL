@@ -82,8 +82,8 @@ class Query
     protected static function replaceHolder($pdo, $key, $type, $value, &$bind_values)
     {
         if ($type === '@ascdesc') {
-            if (!is_string($value) || strcasecmp($value, 'ASC') && strcasecmp($value, 'DESC')) {
-                throw new \DomainException(sprintf('param "%s" must be "ASC" or "DESC"', $key));
+            if (!in_array($value, ['ASC', 'DESC', 'asc', 'desc'], true)) {
+                throw new \DomainException(sprintf('param "%s" must be "ASC", "DESC", "asc" or "desc"', $key));
             }
 
             return $value;
