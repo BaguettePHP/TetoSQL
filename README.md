@@ -12,6 +12,11 @@ Features
   - Type safe
   - Sequence of values
 
+Manual
+------
+
+Japanese: [憂鬱なSQLのためのアレ、またはPDOと仲良くして枕を高くしてねむる](http://qiita.com/tadsan/items/e615a779baa6eabdab47)
+
 Syntax
 ------
 
@@ -22,6 +27,27 @@ Syntax
 * `@string` - String
 * `@string[]` - Sequence of strings
 * `@lob` - [Large OBject](http://php.net/manual/pdo.lobs.php)
+* `@ascdesc` - `"ASC"` or `"DESC"` or `"asc"` or `"desc"`
+
+### Example
+
+``` php
+<?php
+namespace MyApp;
+use Teto\SQL;
+
+const find = '
+ SELECT * FROM `users`
+ WHERE `status` IN (:statuses@int[])
+ LIMIT :offset@int, :limit@int
+';
+$conn = new \PDO('sqlite:/tmp/db.sq3', null, null, [PDO::ATTR_PERSISTENT => true]);
+$data = Query::execute($conn, find, [
+    ':statuses' => [1, 3],
+    ':offset'   => 60,
+    ':limit'    => 30,
+])->fetch(\PDO::FETCH_ASSOC);
+```
 
 Copyright
 ---------
