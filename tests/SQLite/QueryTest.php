@@ -2,7 +2,7 @@
 namespace Teto\SQL\SQLite;
 use Teto\SQL\Query;
 
-final class QueryTest extends \PHPUnit_Framework_TestCase
+final class QueryTest extends \PHPUnit\Framework\TestCase
 {
     /** @var \PDO */
     private $pdo;

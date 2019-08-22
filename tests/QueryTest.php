@@ -6,7 +6,7 @@ namespace Teto\SQL;
  * @copyright 2016 USAMI Kenta
  * @license   https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
  */
-final class QueryTest extends \PHPUnit_Framework_TestCase
+final class QueryTest extends \PHPUnit\Framework\TestCase
 {
     public function test()
     {
