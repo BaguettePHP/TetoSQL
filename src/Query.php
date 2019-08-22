@@ -99,7 +99,9 @@ class Query
                 throw new \DomainException(sprintf('param "%s" is integer out of range.', $key));
             }
 
-            if (!preg_match('/\A-?[1-9][0-9]*\z/', $s)) {
+            $is_zero = $s === 0 || $s === '0';
+
+            if (!$is_zero && !preg_match('/\A-?[1-9][0-9]*\z/', $s)) {
                 throw new \DomainException();
             }
 
