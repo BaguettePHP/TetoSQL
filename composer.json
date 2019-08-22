@@ -14,12 +14,10 @@
     "keywords": [
         "sql"
     ],
-    "require": {
-    },
     "require-dev": {
-         "phpunit/phpunit": "~4.8"
-        ,"theseer/phpdox":  "~0.8"
-        ,"satooshi/php-coveralls": "dev-master"
+        "phpunit/phpunit": " ^7.5 || ^4.8",
+        "php-coveralls/php-coveralls": "^2.1 || ^1.1",
+        "theseer/phpdox": "^0.12.0"
     },
     "autoload": {
         "psr-4": {
@@ -27,6 +25,7 @@
         }
     },
     "autoload-dev": {
+        "files": ["tests/polyfill.php"],
         "psr-4": {
             "Teto\\SQL\\": "tests/"
         }

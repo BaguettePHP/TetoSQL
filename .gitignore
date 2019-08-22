@@ -8,3 +8,4 @@
 /.idea
 /*.iml
 /tests/db.sq3
+/tests/SQLite/db.sq3
