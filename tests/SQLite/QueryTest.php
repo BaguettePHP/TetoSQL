@@ -27,7 +27,7 @@ CREATE TABLE `books` (
 
     public function getPDO()
     {
-        if (is_null($this->pdo)) {
+        if ($this->pdo === null) {
             $dsn = 'sqlite:/' . __DIR__ . '/db.sq3';
             $this->pdo = new \PDO($dsn, null, null, [\PDO::ATTR_PERSISTENT => true]);
         }
