@@ -90,6 +90,10 @@ class Query
         }
 
         if ($type === '@int') {
+            if (is_int($value)) {
+                return $value;
+            }
+
             if (!is_numeric($value)) {
                 throw new \DomainException(sprintf('param "%s" must be numeric', $key));
             }
