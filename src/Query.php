@@ -98,18 +98,15 @@ class Query
                 throw new \DomainException(sprintf('param "%s" must be numeric', $key));
             }
 
-            $s = (string)$value;
-            if ($s < self::INT64_MIN || self::INT64_MAX < $s) {
+            if ($value < self::INT64_MIN || self::INT64_MAX < $value) {
                 throw new \DomainException(sprintf('param "%s" is integer out of range.', $key));
             }
 
-            $is_zero = $s === 0 || $s === '0';
-
-            if (!$is_zero && !preg_match('/\A-?[1-9][0-9]*\z/', $s)) {
-                throw new \DomainException();
+            if ($value !== '0' && !preg_match('/\A-?[1-9][0-9]*\z/', $value)) {
+                throw new \DomainException(sprintf('param "%s" is unexpected integer notation.', $key));
             }
 
-            return (int)$s;
+            return (int)$value;
         }
 
         if ($type === '@int[]') {
@@ -132,7 +129,7 @@ class Query
                 throw new \LogicException('Validation Error.');
             }
 
-            if (!preg_match('/\A(?:-?[1-9][0-9]*)(?:,-?[1-9][0-9]*)*\z/', $valuesString)) {
+            if ($value !== '0' && !preg_match('/\A(?:-?[1-9][0-9]*)(?:,-?[1-9][0-9]*)*\z/', $valuesString)) {
                 throw new \DomainException(sprintf('param "%s[%]"'));
             }
 
