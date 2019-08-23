@@ -1,0 +1,21 @@
+{
+    "timeout": 10,
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "_infection/infection.log",
+        "summary": "_infection/summary.log",
+        "perMutator": "_infection/per-mutator.md",
+        "badge": {
+            "branch": "master"
+        }
+    },
+    "mutators": {
+        "@default": true
+    },
+    "testFramework":"phpunit",
+    "bootstrap":"./tests/bootstrap.php"
+}
