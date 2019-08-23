@@ -169,7 +169,7 @@ class Query
             return $key;
         }
 
-        if ($type === '') {
+        if ($type === '' || $type === '@') {
             throw new \DomainException(sprintf('type specifier for param "%s" not found', $key));
         } else {
             throw new \DomainException(sprintf('unexpected type "%s"', $type));
