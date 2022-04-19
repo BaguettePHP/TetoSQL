@@ -1,14 +1,19 @@
 <?php
-namespace Teto\SQL\SQLite;
-use Teto\SQL\Query;
 
-final class QueryTest extends \PHPUnit\Framework\TestCase
+namespace Teto\SQL\SQLite;
+
+use Teto\SQL\Query;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+
+final class QueryTest extends TestCase
 {
     /** @var \PDO */
     private $pdo;
 
-    public function setUp()
+    public function set_up()
     {
+        parent::set_up();
+
         $pdo = $this->getPDO();
         $pdo->exec(self::DROP_TABLE);
         $pdo->exec(self::CREATE_TABLE);
