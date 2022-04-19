@@ -54,7 +54,7 @@ CREATE TABLE `books` (
             ':id' => $id,
         ])->fetch(\PDO::FETCH_ASSOC);
 
-        $this->assertSame($id, $actual['id']);
+        $this->assertEquals($id, $actual['id']);
         $this->assertSame('Thirty-six Views of Mount Fuji', $actual['name']);
 
         $blob = file_get_contents($img_file);
