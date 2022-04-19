@@ -43,6 +43,8 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
+      - name: Remove composer.lock
+        run: rm -f composer.lock
       - name: Setup Composer
         run: composer install
       - name: Run PHPUnit tests
