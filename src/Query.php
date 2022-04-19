@@ -72,7 +72,8 @@ class Query
 
         $stmt = $pdo->prepare($sql);
 
-        foreach ($bind_values as $key => list($type, $value)) {
+        foreach ($bind_values as $key => $param) {
+            list($type, $value) = $param;
             $stmt->bindParam($key, $value, $type);
         }
 
