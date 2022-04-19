@@ -4,6 +4,8 @@ namespace Teto\SQL\Query;
 
 use Teto\SQL\Query;
 use Teto\SQL\DummyPDO;
+use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
+use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
 
 /**
  * @author    USAMI Kenta <tadsan@zonu.me>
@@ -12,6 +14,9 @@ use Teto\SQL\DummyPDO;
  */
 final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
 {
+    use ExpectException;
+    use ExpectPHPException;
+
     /**
      * @dataProvider acceptDataProvider
      */
