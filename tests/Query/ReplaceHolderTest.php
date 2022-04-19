@@ -21,7 +21,7 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
 
         $actual = call_user_func(\Closure::bind(function () use ($pdo, $type, $input) {
             return Query::replaceHolder($pdo, ':key', "@{$type}", $input, $bind_values);
-        }, null, Query::class));
+        }, null, 'Teto\SQL\Query'));
 
         $this->assertSame($expected, $actual);
     }
@@ -59,12 +59,12 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
     {
         $pdo = new DummyPDO();
 
-        $this->expectException(\DomainException::class);
+        $this->expectException('DomainException');
         $this->expectExceptionMessage($expected_message);
 
         call_user_func(\Closure::bind(function () use ($pdo, $type, $input) {
             return Query::replaceHolder($pdo, ':key', $type, $input, $bind_values);
-        }, null, Query::class));
+        }, null, 'Teto\SQL\Query'));
     }
 
     public function rejeceptDataProvider()
