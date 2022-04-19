@@ -19,7 +19,7 @@
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.1 || ^1.1",
-        "phpunit/phpunit": "^7.5 || ^4.8",
+        "phpunit/phpunit": "^8.5 || ^7.5 || ^4.8",
         "yoast/phpunit-polyfills": "^1.0"
     },
     "autoload": {

@@ -5,6 +5,7 @@
 /composer.lock
 /phpunit.xml
 /vendor/*
+/.phpunit.result.cache
 /.idea
 /*.iml
 /tests/db.sq3
