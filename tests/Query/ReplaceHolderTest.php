@@ -84,7 +84,7 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
             ['@int', '-9223372036854775809', 'param ":key" is integer out of range.'],
             ['@int[]', 0, 'param ":key" must be int array'],
             ['@int[]', [], 'param ":key" must be not empty int array'],
-            ['@int[]', ['1', 'a', '3'], 'param ":key[]" is integer out of range.'],
+            ['@int[]', ['1', 'a', '3'], 'param ":key[1]" is integer out of range.'],
             ['@string', [], 'param ":key" must be string or numeric'],
             ['@string[]', '', 'param ":key" must be string array'],
             ['@string[]', [], 'param ":key" must be not empty string array'],
