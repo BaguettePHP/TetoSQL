@@ -4,6 +4,8 @@ namespace Teto\SQL\Query;
 
 use Teto\SQL\Query;
 use Teto\SQL\DummyPDO;
+use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
+use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
 
 /**
  * @author    USAMI Kenta <tadsan@zonu.me>
@@ -12,6 +14,9 @@ use Teto\SQL\DummyPDO;
  */
 final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
 {
+    use ExpectException;
+    use ExpectPHPException;
+
     /**
      * @dataProvider acceptDataProvider
      */
@@ -21,7 +26,7 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
 
         $actual = call_user_func(\Closure::bind(function () use ($pdo, $type, $input) {
             return Query::replaceHolder($pdo, ':key', "@{$type}", $input, $bind_values);
-        }, null, Query::class));
+        }, null, 'Teto\SQL\Query'));
 
         $this->assertSame($expected, $actual);
     }
@@ -59,12 +64,12 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
     {
         $pdo = new DummyPDO();
 
-        $this->expectException(\DomainException::class);
+        $this->expectException('DomainException');
         $this->expectExceptionMessage($expected_message);
 
         call_user_func(\Closure::bind(function () use ($pdo, $type, $input) {
             return Query::replaceHolder($pdo, ':key', $type, $input, $bind_values);
-        }, null, Query::class));
+        }, null, 'Teto\SQL\Query'));
     }
 
     public function rejeceptDataProvider()
@@ -79,7 +84,7 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
             ['@int', '-9223372036854775809', 'param ":key" is integer out of range.'],
             ['@int[]', 0, 'param ":key" must be int array'],
             ['@int[]', [], 'param ":key" must be not empty int array'],
-            ['@int[]', ['1', 'a', '3'], 'param ":key[]" is integer out of range.'],
+            ['@int[]', ['1', 'a', '3'], 'param ":key[1]" is integer out of range.'],
             ['@string', [], 'param ":key" must be string or numeric'],
             ['@string[]', '', 'param ":key" must be string array'],
             ['@string[]', [], 'param ":key" must be not empty string array'],

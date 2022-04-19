@@ -72,7 +72,8 @@ class Query
 
         $stmt = $pdo->prepare($sql);
 
-        foreach ($bind_values as $key => list($type, $value)) {
+        foreach ($bind_values as $key => $param) {
+            list($type, $value) = $param;
             $stmt->bindParam($key, $value, $type);
         }
 
@@ -120,7 +121,7 @@ class Query
             foreach ($value as $i => $item) {
                 $s = (string)$item;
                 if ($s < self::INT64_MIN || self::INT64_MAX < $s) {
-                    throw new \DomainException(sprintf('param "%s[%i]" is integer out of range.', $key, $i));
+                    throw new \DomainException(sprintf('param "%s[%d]" is integer out of range.', $key, $i));
                 }
             }
 

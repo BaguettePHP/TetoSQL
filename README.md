@@ -1,6 +1,10 @@
 TetoSQL
 =======
 
+[![Test](https://github.com/BaguettePHP/TetoSQL/actions/workflows/test.yml/badge.svg)](https://github.com/BaguettePHP/TetoSQL/actions/workflows/test.yml)
+[![lang:PHP 8.1](https://img.shields.io/badge/lang-PHP%208.1-brightgreen.svg)](https://php.net/manual/migration82.php)
+[![lang:PHP 5.4](https://img.shields.io/badge/lang-PHP%205.4-green.svg)](https://php.net/downloads.php)
+
 [PHP Data Objects](http://php.net/manual/book.pdo.php)(PDO) wrapper and SQL Template for PHP
 
 Features
