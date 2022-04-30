@@ -28,7 +28,6 @@
         }
     },
     "autoload-dev": {
-        "files": ["tests/polyfill.php"],
         "psr-4": {
             "Teto\\SQL\\": "tests/"
         }
