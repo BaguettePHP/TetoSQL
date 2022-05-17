@@ -3,9 +3,9 @@ parameters:
 		-
 			message: "#^Generic type Teto\\\\SQL\\\\PDOAggregate\\<PDO\\|Teto\\\\SQL\\\\PDOInterface\\<PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface\\>\\> in PHPDoc tag @param for parameter \\$pdo does not specify all template types of interface Teto\\\\SQL\\\\PDOAggregate\\: S, T$#"
 			count: 2
-			path: src/Query.php
+			path: src/AbstractStaticQuery.php
 
 		-
 			message: "#^Type PDO\\|Teto\\\\SQL\\\\PDOInterface\\<PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface\\> in generic type Teto\\\\SQL\\\\PDOAggregate\\<PDO\\|Teto\\\\SQL\\\\PDOInterface\\<PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface\\>\\> in PHPDoc tag @param for parameter \\$pdo is not subtype of template type S of PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface of interface Teto\\\\SQL\\\\PDOAggregate\\.$#"
 			count: 2
-			path: src/Query.php
+			path: src/AbstractStaticQuery.php
