@@ -3,15 +3,13 @@
 namespace Teto\SQL;
 
 /**
- * Default implementation of safer SQL query builder by TetoSQL
+ * A generic SQL template engine (dynamic placeholder)
  *
  * @copyright 2016 pixiv Inc.
- * @license   https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
+ * @license https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
  */
-class Query
+class QueryBuilder
 {
-    use StaticQueryExecuteTrait;
-
     const INT64_MAX =  '9223372036854775807';
     const INT64_MIN = '-9223372036854775808';
 
@@ -29,13 +27,13 @@ class Query
      * @return \PDOStatement
      * @phpstan-return ($pdo is \PDO ? \PDOStatement : S)
      */
-    public static function build($pdo, $sql, array $params)
+    public function build($pdo, $sql, array $params)
     {
         $bind_values = [];
         $sql = strtr($sql, "\n", ' ');
         /** @var string $sql */
         $sql = preg_replace_callback(
-            '/'.Query::RE_HOLDER.'/',
+            '/' . self::RE_HOLDER . '/',
             function ($m) use ($pdo, $params, &$bind_values) { // @phpstan-ignore-line
                 $key  = $m['key'];
                 $type = $m['type'];
@@ -70,7 +68,7 @@ class Query
      * @param ?array<mixed> $bind_values
      * @return string|int
      */
-    protected static function replaceHolder($pdo, $key, $type, $value, &$bind_values)
+    protected function replaceHolder($pdo, $key, $type, $value, &$bind_values)
     {
         if ($type === '@ascdesc') {
             if (!in_array($value, ['ASC', 'DESC', 'asc', 'desc'], true)) {
