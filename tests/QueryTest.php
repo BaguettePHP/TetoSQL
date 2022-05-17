@@ -11,6 +11,9 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
  */
 final class QueryTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function test()
     {
         $pdo = new DummyPDO;

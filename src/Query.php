@@ -18,13 +18,24 @@ class Query
     /**
      * Build SQL query and execute
      *
+     * @template S of \PDOStatement|PDOStatementInterface
+     * @template T of \PDO|PDOInterface<S>
      * @param \PDO|PDOInterface|PDOAggregate $pdo
+     * @phpstan-param T|PDOAggregate<T> $pdo
      * @param string $sql
-     * @param array  $params
+     * @phpstan-param non-empty-string $sql
+     * @phpstan-param array<non-empty-string,mixed> $params
+     * @return \PDOStatement|PDOStatementInterface
+     * @phpstan-return ($pdo is \PDO ? \PDOStatement : S)
      */
     public static function execute($pdo, $sql, array $params)
     {
-        $stmt = Query::build(($pdo instanceof PDOAggregate) ? $pdo->getPDO() : $pdo, $sql, $params);
+        if ($pdo instanceof PDOAggregate) {
+            /** @phpstan-var T $pdo */
+            $pdo = $pdo->getPDO();
+        }
+
+        $stmt = Query::build($pdo, $sql, $params);
         $stmt->execute();
 
         return $stmt;
@@ -33,32 +44,52 @@ class Query
     /**
      * Build SQL query and execute
      *
+     * @template S of \PDOStatement|PDOStatementInterface
+     * @template T of \PDO|PDOInterface<S>
      * @param \PDO|PDOInterface|PDOAggregate $pdo
+     * @phpstan-param T|PDOAggregate<T> $pdo
      * @param string $sql
-     * @param array  $params
+     * @phpstan-param non-empty-string $sql
+     * @phpstan-param array<non-empty-string,mixed> $params
+     * @param ?string $name
+     * @return string
      */
     public static function executeAndReturnInsertId($pdo, $sql, array $params, $name = null)
     {
-        $stmt = Query::build(($pdo instanceof PDOAggregate) ? $pdo->getPDO() : $pdo, $sql, $params);
+        if ($pdo instanceof PDOAggregate) {
+            /** @phpstan-var T $pdo */
+            $pdo = $pdo->getPDO();
+        }
+
+        $stmt = Query::build($pdo, $sql, $params);
         $stmt->execute();
 
-        return $pdo->lastInsertId($name);
+        $id = $pdo->lastInsertId($name);
+        assert($id !== false);
+
+        return $id;
     }
 
     /**
      * Build SQL query
      *
+     * @template S of \PDOStatement|PDOStatementInterface
+     * @template T of \PDO|PDOInterface<S>
      * @param \PDO|PDOInterface $pdo
-     * @param string $sql
-     * @param array  $params
+     * @phpstan-param T $pdo
+     * @phpstan-param non-empty-string $sql
+     * @phpstan-param array<non-empty-string,mixed> $params
+     * @return \PDOStatement
+     * @phpstan-return ($pdo is \PDO ? \PDOStatement : S)
      */
     public static function build($pdo, $sql, array $params)
     {
         $bind_values = [];
         $sql = strtr($sql, "\n", ' ');
+        /** @var string $sql */
         $sql = preg_replace_callback(
             '/'.Query::RE_HOLDER.'/',
-            function ($m) use ($pdo, $params, &$bind_values) {
+            function ($m) use ($pdo, $params, &$bind_values) { // @phpstan-ignore-line
                 $key  = $m['key'];
                 $type = $m['type'];
 
@@ -72,6 +103,7 @@ class Query
         );
 
         $stmt = $pdo->prepare($sql);
+        assert($stmt !== false);
 
         foreach ($bind_values as $key => $param) {
             list($type, $value) = $param;
@@ -81,6 +113,16 @@ class Query
         return $stmt;
     }
 
+    /**
+     * @param \PDO|PDOInterface $pdo
+     * @template S of \PDOStatement|PDOStatementInterface
+     * @phpstan-param \PDO|PDOInterface<S> $pdo
+     * @param string $key
+     * @param string $type
+     * @param mixed $value
+     * @param ?array<mixed> $bind_values
+     * @return string|int
+     */
     protected static function replaceHolder($pdo, $key, $type, $value, &$bind_values)
     {
         if ($type === '@ascdesc') {
@@ -104,6 +146,7 @@ class Query
                 throw new \DomainException(sprintf('param "%s" is integer out of range.', $key));
             }
 
+            /** @var numeric-string $value */
             if ($value !== '0' && !preg_match('/\A-?[1-9][0-9]*\z/', $value)) {
                 throw new \DomainException(sprintf('param "%s" is unexpected integer notation.', $key));
             }
