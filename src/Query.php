@@ -3,72 +3,19 @@
 namespace Teto\SQL;
 
 /**
- * Safe query builder
+ * Default implementation of safer SQL query builder by TetoSQL
  *
  * @copyright 2016 pixiv Inc.
  * @license   https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
  */
 class Query
 {
+    use StaticQueryExecuteTrait;
+
     const INT64_MAX =  '9223372036854775807';
     const INT64_MIN = '-9223372036854775808';
 
     const RE_HOLDER = '(?<holder>(?<key>:[a-zA-Z0-9_]+)(?<type>(?:@[a-zA-Z_\[\]]+)?))';
-
-    /**
-     * Build SQL query and execute
-     *
-     * @template S of \PDOStatement|PDOStatementInterface
-     * @template T of \PDO|PDOInterface<S>
-     * @param \PDO|PDOInterface|PDOAggregate $pdo
-     * @phpstan-param T|PDOAggregate<T> $pdo
-     * @param string $sql
-     * @phpstan-param non-empty-string $sql
-     * @phpstan-param array<non-empty-string,mixed> $params
-     * @return \PDOStatement|PDOStatementInterface
-     * @phpstan-return ($pdo is \PDO ? \PDOStatement : S)
-     */
-    public static function execute($pdo, $sql, array $params)
-    {
-        if ($pdo instanceof PDOAggregate) {
-            /** @phpstan-var T $pdo */
-            $pdo = $pdo->getPDO();
-        }
-
-        $stmt = Query::build($pdo, $sql, $params);
-        $stmt->execute();
-
-        return $stmt;
-    }
-
-    /**
-     * Build SQL query and execute
-     *
-     * @template S of \PDOStatement|PDOStatementInterface
-     * @template T of \PDO|PDOInterface<S>
-     * @param \PDO|PDOInterface|PDOAggregate $pdo
-     * @phpstan-param T|PDOAggregate<T> $pdo
-     * @param string $sql
-     * @phpstan-param non-empty-string $sql
-     * @phpstan-param array<non-empty-string,mixed> $params
-     * @param ?string $name
-     * @return string
-     */
-    public static function executeAndReturnInsertId($pdo, $sql, array $params, $name = null)
-    {
-        if ($pdo instanceof PDOAggregate) {
-            /** @phpstan-var T $pdo */
-            $pdo = $pdo->getPDO();
-        }
-
-        $stmt = Query::build($pdo, $sql, $params);
-        $stmt->execute();
-
-        $id = $pdo->lastInsertId($name);
-        assert($id !== false);
-
-        return $id;
-    }
 
     /**
      * Build SQL query
