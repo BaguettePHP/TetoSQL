@@ -1,4 +1,5 @@
 <?php
+
 namespace Teto\SQL;
 
 /**
@@ -131,7 +132,7 @@ class Query
             }
 
             if ($value !== '0' && !preg_match('/\A(?:-?[1-9][0-9]*)(?:,-?[1-9][0-9]*)*\z/', $valuesString)) {
-                throw new \DomainException(sprintf('param "%s[%]"'));
+                throw new \DomainException(sprintf('param "%s" must be int array', $key));
             }
 
             return $valuesString;
