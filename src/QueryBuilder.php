@@ -30,9 +30,45 @@ class QueryBuilder
     public function build($pdo, $sql, array $params)
     {
         $bind_values = [];
-        $sql = strtr($sql, "\n", ' ');
-        /** @var string $sql */
-        $sql = preg_replace_callback(
+        $built_sql = $this->replaceParameters($pdo, $this->trimQuery($sql), $params, $bind_values);
+
+        $stmt = $pdo->prepare($built_sql);
+        assert($stmt !== false);
+
+        foreach ($bind_values as $key => $param) {
+            list($type, $value) = $param;
+            $stmt->bindParam($key, $value, $type);
+        }
+
+        return $stmt;
+    }
+
+    /**
+     * @param string $sql
+     * @phpstan-param non-empty-string $sql
+     * @return string
+     */
+    public function trimQuery($sql)
+    {
+        return strtr($sql, "\n", ' ');
+    }
+
+    /**
+     * Replace query placeholders with parameters
+     *
+     * @template S of \PDOStatement|PDOStatementInterface
+     * @template T of \PDO|PDOInterface<S>
+     * @param \PDO|PDOInterface $pdo
+     * @phpstan-param T $pdo
+     * @param string $sql
+     * @phpstan-param array<non-empty-string,mixed> $params
+     * @phpstan-param array<non-empty-string,mixed> $bind_values
+     * @return string
+     */
+    public function replaceParameters($pdo, $sql, array $params, array &$bind_values)
+    {
+        /** @var string $built_sql */
+        $built_sql = preg_replace_callback(
             '/' . self::RE_HOLDER . '/',
             function ($m) use ($pdo, $params, &$bind_values) { // @phpstan-ignore-line
                 $key  = $m['key'];
@@ -42,20 +78,12 @@ class QueryBuilder
                     throw new \OutOfRangeException(sprintf('param "%s" expected but not assigned', $key));
                 }
 
-                return self::replaceHolder($pdo, $key, $type, $params[$key], $bind_values);
+                return $this->replaceHolder($pdo, $key, $type, $params[$key], $bind_values);
             },
             $sql
         );
 
-        $stmt = $pdo->prepare($sql);
-        assert($stmt !== false);
-
-        foreach ($bind_values as $key => $param) {
-            list($type, $value) = $param;
-            $stmt->bindParam($key, $value, $type);
-        }
-
-        return $stmt;
+        return $built_sql;
     }
 
     /**
@@ -68,7 +96,7 @@ class QueryBuilder
      * @param ?array<mixed> $bind_values
      * @return string|int
      */
-    protected function replaceHolder($pdo, $key, $type, $value, &$bind_values)
+    public function replaceHolder($pdo, $key, $type, $value, &$bind_values)
     {
         if ($type === '@ascdesc') {
             if (!in_array($value, ['ASC', 'DESC', 'asc', 'desc'], true)) {
