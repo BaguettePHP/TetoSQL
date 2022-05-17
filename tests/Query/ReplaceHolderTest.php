@@ -19,6 +19,10 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider acceptDataProvider
+     * @param string $type
+     * @param mixed $input
+     * @param string|int $expected
+     * @return void
      */
     public function test_accept($type, $input, $expected)
     {
@@ -31,6 +35,9 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($expected, $actual);
     }
 
+    /**
+     * @return iterable<array{string, mixed, string|int}>
+     */
     public function acceptDataProvider()
     {
         return [
@@ -59,6 +66,10 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider rejeceptDataProvider
+     * @param string $type
+     * @param mixed $input
+     * @param string $expected_message
+     * @return void
      */
     public function test_raise_exception($type, $input, $expected_message)
     {
@@ -72,6 +83,9 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
         }, null, 'Teto\SQL\Query'));
     }
 
+    /**
+     * @return iterable<array{string, mixed, string}>
+     */
     public function rejeceptDataProvider()
     {
         return [

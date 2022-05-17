@@ -30,6 +30,9 @@ CREATE TABLE `books` (
     const INSERT = 'INSERT INTO `books` (`name`, `cover`) VALUES (:name@string, :cover@lob)';
     const SELECT_BY_ID = 'SELECT `id`, `name`, `cover` FROM `books` WHERE `id` = :id@int';
 
+    /**
+     * @return \PDO
+     */
     public function getPDO()
     {
         if ($this->pdo === null) {
@@ -40,6 +43,9 @@ CREATE TABLE `books` (
         return $this->pdo;
     }
 
+    /**
+     * @return void
+     */
     public function test()
     {
         $pdo = $this->getPDO();
@@ -50,6 +56,7 @@ CREATE TABLE `books` (
             ':cover' => fopen($img_file, 'rb'),
         ]);
 
+        /** @var array{id:int, name:string, cover:string} $actual */
         $actual = Query::execute($pdo, self::SELECT_BY_ID, [
             ':id' => $id,
         ])->fetch(\PDO::FETCH_ASSOC);
