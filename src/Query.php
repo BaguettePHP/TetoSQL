@@ -16,7 +16,10 @@ final class Query extends AbstractStaticQuery
     public static function getQueryBuilder()
     {
         if (self::$query_builder === null) {
-            self::$query_builder = new QueryBuilder();
+            self::$query_builder = new QueryBuilder([
+                new Processor\SimpleSingleLine(),
+                new Processor\DynamicPlaceholder(),
+            ]);
         }
 
         return self::$query_builder;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Teto\SQL\QueryBuilder;
+namespace Teto\SQL\Processor;
 
 use Teto\SQL\QueryBuilder;
 use Teto\SQL\DummyPDO;
@@ -18,12 +18,12 @@ final class ReplaceHolderTest extends TestCase
     use ExpectException;
     use ExpectPHPException;
 
-    /** @var QueryBuilder */
+    /** @var DynamicPlaceholder */
     private $subject;
 
     public function set_up()
     {
-        $this->subject = new QueryBuilder();
+        $this->subject = new DynamicPlaceholder();
     }
 
     /**
