@@ -53,12 +53,14 @@ final class IfBlockTest extends TestCase
   Then!
 %endif
 Rest';
+        $query_has_if_single_line = '%if :cond Then! %endif Rest';
         $query_has_if_else = '%if :cond
   Then!
 %else
   Else!
 %endif
 Rest';
+        $query_has_if_else_single_line = '%if :cond Then! %else Else! %endif Rest';
         $query_has_2_if_else = '%if :cond_1
   1st Then!
 %else
@@ -90,7 +92,7 @@ Rest';
             [
                 $query_has_if,
                 [':cond' => true],
-                "\n  Then!\n\nRest",
+                "  Then!\nRest",
             ],
             [
                 $query_has_if,
@@ -98,39 +100,49 @@ Rest';
                 "\nRest",
             ],
             [
+                $query_has_if_single_line,
+                [':cond' => false],
+                " Rest",
+            ],
+            [
                 $query_has_if_else,
                 [':cond' => false],
-                "\n  Else!\n\nRest",
+                "\n  Else!\nRest",
+            ],
+            [
+                $query_has_if_else_single_line,
+                [':cond' => false],
+                "Else! Rest",
             ],
             [
                 implode("\n", [$query_has_if_else, $query_has_if_else]),
                 [':cond' => false],
-                "\n  Else!\n\nRest\n\n  Else!\n\nRest",
+                "\n  Else!\nRest\n  Else!\nRest",
             ],
             [
                 $query_has_2_if_else,
                 [':cond_1' => true, ':cond_2' => true],
-                "\n  1st Then!\n\n\nBetween\n\n  2nd Then!\n\nRest",
+                "  1st Then!\n\nBetween\n  2nd Then!\nRest",
             ],
             [
                 $query_has_2_if_else,
                 [':cond_1' => true, ':cond_2' => false],
-                "\n  1st Then!\n\n\nBetween\n\n  2nd Else!\n\nRest",
+                "  1st Then!\n\nBetween\n\n  2nd Else!\nRest",
             ],
             [
                 $query_has_2_if_else,
                 [':cond_1' => false, ':cond_2' => true],
-                "\n  1st Else!\n\n\nBetween\n\n  2nd Then!\n\nRest",
+                "\n  1st Else!\n\nBetween\n  2nd Then!\nRest",
             ],
             [
                 $query_has_2_if_else,
                 [':cond_1' => false, ':cond_2' => false],
-                "\n  1st Else!\n\n\nBetween\n\n  2nd Else!\n\nRest",
+                "\n  1st Else!\n\nBetween\n\n  2nd Else!\nRest",
             ],
             [
                 $query_has_if_invalid_else,
                 [':cond' => true],
-                "\n  Then!\n\"%else\"\n  Not else!\n\nRest",
+                "  Then!\n\"%else\"\n  Not else!\nRest",
             ],
             [
                 $query_has_if_invalid_else,

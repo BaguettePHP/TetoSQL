@@ -15,11 +15,11 @@ use DomainException;
 class IfBlock implements ProcessorInterface
 {
     const IF_PATTERN = '/
-^\s*%if\s+(?<cond>:[a-zA-Z0-9_]+\s*$) # first line
-(?<block>\s[\s\S]*?\s) # block, includes %else
-^\s*%endif$ # block termination
+(?:^|\s)%if\s+(?<cond>:[a-zA-Z0-9_]+\s) # first line
+(?<block>[\s\S]*?) # block, includes %else
+\s%endif\b # block termination
 /mx';
-    const ELSE_SPLITTER = '/^\s*%else\s*$/m';
+    const ELSE_SPLITTER = '/(?:^|\s)%else(?:$|\s)/m';
 
     public function processQuery($pdo, $sql, array $params, array &$bind_values)
     {
