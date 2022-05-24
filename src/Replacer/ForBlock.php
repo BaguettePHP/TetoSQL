@@ -47,11 +47,11 @@ class ForBlock implements ReplacerInterface
         if ($glue === '') {
             $glue = ',';
         }
-        $name = rtrim($matches['forName']);
+        $name = \rtrim($matches['forName']);
         if (!isset($params[$name])) {
             throw new DomainException(sprintf('Must be assigned parameter %s.', $name));
         }
-        if (!is_array($params[$name])) {
+        if (!\is_array($params[$name])) {
             throw new DomainException(sprintf('Parameter %s must be an array.', $name));
         }
 
@@ -59,7 +59,7 @@ class ForBlock implements ReplacerInterface
         $array = $params[$name];
 
         $block = $matches['forBlock'];
-        if (strpos($block, '%for') !== false) {
+        if (\strpos($block, '%for') !== false) {
             throw new DomainException('Nested %for is not supported.');
         }
 
@@ -72,6 +72,6 @@ class ForBlock implements ReplacerInterface
             $replaced[] = \ltrim($new);
         }
 
-        return implode($glue, $replaced);
+        return \implode($glue, $replaced);
     }
 }
