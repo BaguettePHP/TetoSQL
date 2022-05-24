@@ -2,6 +2,8 @@
 
 namespace Teto\SQL;
 
+use Teto\SQL\Processor\PregCallbackReplacer;
+
 /**
  * Default implementation of safer SQL query builder by TetoSQL
  *
@@ -16,9 +18,15 @@ final class Query extends AbstractStaticQuery
     public static function getQueryBuilder()
     {
         if (self::$query_builder === null) {
+            $if_block= new Processor\IfBlock();
+            $placeholder_replacer = new Replacer\Placeholder();
             self::$query_builder = new QueryBuilder([
                 new Processor\SimpleSingleLine(),
-                new Processor\DynamicPlaceholder(),
+                $if_block,
+                new PregCallbackReplacer([
+                    new Replacer\ForBlock([new PregCallbackReplacer([$placeholder_replacer])]),
+                    $placeholder_replacer,
+                ]),
             ]);
         }
 
