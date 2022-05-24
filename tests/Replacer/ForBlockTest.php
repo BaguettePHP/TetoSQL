@@ -1,6 +1,6 @@
 <?php
 
-namespace Teto\SQL\Processor;
+namespace Teto\SQL\Replacer;
 
 use DomainException;
 use OutOfRangeException;
@@ -25,8 +25,10 @@ final class ForBlockTest extends TestCase
 
     public function set_up()
     {
-        $placeholder_replacer = new DynamicPlaceholder();
-        $this->subject = new ForBlock($placeholder_replacer);
+        $placeholder_replacer = new Placeholder();
+        $this->subject = new ForBlock([
+            $placeholder_replacer
+        ]);
     }
 
     /**
@@ -75,10 +77,38 @@ Rest';
                         [':a' => 'A3', ':b' => 'B3'],
                     ]
                 ],
-                '
-    @A1@ - @B1@
+                '    @A1@ - @B1@
     @A2@ - @B2@
-    @A3@ - @B3@',
+    @A3@ - @B3@
+',
+            ],
+            [
+                '%for :arr :a@string - :b@string %endfor',
+                [
+                    ':arr' => [
+                        [':a' => 'A1', ':b' => 'B1'],
+                        [':a' => 'A2', ':b' => 'B2'],
+                        [':a' => 'A3', ':b' => 'B3'],
+                    ]
+                ],
+                ' @A1@ - @B1@
+ @A2@ - @B2@
+ @A3@ - @B3@
+',
+            ],
+            [
+                '%for[] :arr  :a@string - :b@string %endfor ',
+                [
+                    ':arr' => [
+                        [':a' => 'A1', ':b' => 'B1'],
+                        [':a' => 'A2', ':b' => 'B2'],
+                        [':a' => 'A3', ':b' => 'B3'],
+                    ]
+                ],
+                ' @A1@ - @B1@
+ @A2@ - @B2@
+ @A3@ - @B3@
+',
             ],
         ];
     }

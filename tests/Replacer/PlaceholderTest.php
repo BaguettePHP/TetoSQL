@@ -1,9 +1,9 @@
 <?php
 
-namespace Teto\SQL\Processor;
+namespace Teto\SQL\Replacer;
 
-use Teto\SQL\QueryBuilder;
 use Teto\SQL\DummyPDO;
+use Teto\SQL\QueryBuilder;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
@@ -18,12 +18,12 @@ final class ReplaceHolderTest extends TestCase
     use ExpectException;
     use ExpectPHPException;
 
-    /** @var DynamicPlaceholder */
+    /** @var Placeholder */
     private $subject;
 
     public function set_up()
     {
-        $this->subject = new DynamicPlaceholder();
+        $this->subject = new Placeholder();
     }
 
     /**

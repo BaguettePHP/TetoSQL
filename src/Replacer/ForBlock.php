@@ -1,6 +1,6 @@
 <?php
 
-namespace Teto\SQL\Processor;
+namespace Teto\SQL\Replacer;
 
 use Teto\SQL\ProcessorInterface;
 

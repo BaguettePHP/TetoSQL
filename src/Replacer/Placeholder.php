@@ -1,8 +1,8 @@
 <?php
 
-namespace Teto\SQL\Processor;
+namespace Teto\SQL\Replacer;
 
-use Teto\SQL\ProcessorInterface;
+use Teto\SQL\ReplacerInterface;
 
 /**
  * Replace placeholder using {@see \PDO::quote()}
@@ -10,32 +10,33 @@ use Teto\SQL\ProcessorInterface;
  * @copyright 2016 pixiv Inc.
  * @license https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
  */
-class DynamicPlaceholder implements ProcessorInterface
+class Placeholder implements ReplacerInterface
 {
     const INT64_MAX =  '9223372036854775807';
     const INT64_MIN = '-9223372036854775808';
 
-    const RE_HOLDER = '(?<holder>(?<key>:[a-zA-Z0-9_]+)(?<type>(?:@[a-zA-Z_\[\]]+)?))';
+    const PATTERN = '(?<placeholderKey>:[a-zA-Z0-9_]+)(?<placeholderType>(?:@[a-zA-Z_\[\]]+)?)';
 
-    public function processQuery($pdo, $sql, array $params, array &$bind_values)
+    public function replaceQuery($pdo, array $matches, array $params, array &$bind_values)
     {
-        /** @var string $built_sql */
-        $built_sql = preg_replace_callback(
-            '/' . self::RE_HOLDER . '/',
-            function ($m) use ($pdo, $params, &$bind_values) { // @phpstan-ignore-line
-                $key  = $m['key'];
-                $type = $m['type'];
+        $key  = $matches['placeholderKey'];
+        $type = $matches['placeholderType'];
 
-                if (!isset($params[$key])) {
-                    throw new \OutOfRangeException(sprintf('param "%s" expected but not assigned', $key));
-                }
+        if (!isset($params[$key])) {
+            throw new \OutOfRangeException(sprintf('param "%s" expected but not assigned', $key));
+        }
 
-                return $this->replaceHolder($pdo, $key, $type, $params[$key], $bind_values);
-            },
-            $sql
-        );
+        return $this->replaceHolder($pdo, $key, $type, $params[$key], $bind_values);
+    }
 
-        return $built_sql;
+    public function getKey()
+    {
+        return 'placeholder';
+    }
+
+    public function getPattern()
+    {
+        return self::PATTERN;
     }
 
     /**
