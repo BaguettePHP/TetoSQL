@@ -3,6 +3,7 @@
 namespace Teto\SQL\Replacer;
 
 use Teto\SQL\ProcessorInterface;
+use Teto\SQL\ReplacerInterface;
 
 use DomainException;
 
@@ -12,54 +13,65 @@ use DomainException;
  * @copyright 2016 pixiv Inc.
  * @license https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
  */
-class ForBlock implements ProcessorInterface
+class ForBlock implements ReplacerInterface
 {
-    const FOR_PATTERN = '/
-^\s*%for\s*(?:\[(?<glue>[^\]]*)\])?\s+(?<name>:[a-zA-Z0-9_]+\s*$) # first line
-(?<block>\s[\s\S]*?\s) # block, includes %else
-^\s*%endfor$ # block termination
-/mx';
+    const FOR_PATTERN = '(?:^|\s)%for\s*(?:\[(?<forGlue>[^\]]*)\])?\s+(?<forName>:[a-zA-Z0-9_]+\s) # first line
+(?<forBlock>\s[\s\S]*?)\s # block, includes %else
+(?:^|\s*)%endfor(?:\s|$) # block termination
+';
 
-    /** @var DynamicPlaceholder */
-    private $placeholder_replacer;
+    /** @phpstan-var list<ProcessorInterface> */
+    private $processors;
 
-    public function __construct(DynamicPlaceholder $placeholder_replacer)
+    /**
+     * @phpstan-param list<ProcessorInterface> $processors
+     */
+    public function __construct(array $processors)
     {
-        $this->placeholder_replacer = $placeholder_replacer;
+        $this->processors = $processors;
     }
 
-    public function processQuery($pdo, $sql, array $params, array &$bind_values)
+    public function getKey()
     {
-        $built_sql = preg_replace_callback(self::FOR_PATTERN, function (array $matches) use (
-            $pdo, $params, &$bind_values
-        ) {
-            $glue = $matches['glue'];
-            $name = rtrim($matches['name']);
-            if (!isset($params[$name])) {
-                throw new DomainException(sprintf('Must be assigned parameter %s.', $name));
+        return 'for';
+    }
+
+    public function getPattern()
+    {
+        return self::FOR_PATTERN;
+    }
+
+    public function replaceQuery($pdo, array $matches, array $params, array &$bind_values)
+    {
+        $glue = $matches['forGlue'];
+        if ($glue === '') {
+            $glue = ',';
+        }
+        $name = rtrim($matches['forName']);
+        if (!isset($params[$name])) {
+            throw new DomainException(sprintf('Must be assigned parameter %s.', $name));
+        }
+        if (!is_array($params[$name])) {
+            throw new DomainException(sprintf('Parameter %s must be an array.', $name));
+        }
+
+        /** @phpstan-var array<non-empty-string, array<non-empty-string, mixed>> $array */
+        $array = $params[$name];
+
+        $block = $matches['forBlock'];
+        if (strpos($block, '%for') !== false) {
+            throw new DomainException('Nested %for is not supported.');
+        }
+
+        $replaced = [];
+        foreach ($array as $row) {
+            $new = $block;
+            foreach ($this->processors as $processor) {
+                $new = $processor->processQuery($pdo, $new, $row, $bind_values);
             }
-            if (!is_array($params[$name])) {
-                throw new DomainException(sprintf('Parameter %s must be an array.', $name));
-            }
+            $replaced[] = \ltrim($new);
+        }
 
-            /** @phpstan-var array<non-empty-string, array<non-empty-string, mixed>> $array */
-            $array = $params[$name];
-
-            $block = rtrim($matches['block'], "\n");
-            if (strpos($block, '%for') !== false) {
-                throw new DomainException('Nested %for is not supported.');
-            }
-
-            $replaced = [];
-            foreach ($array as $row) {
-                $replaced[] = $this->placeholder_replacer->processQuery($pdo, $block, $row, $bind_values);
-            }
-
-            return implode($glue, $replaced);
-        }, $sql);
-
-        assert($built_sql !== null);
-
-        return $built_sql;
+        return implode($glue, $replaced);
     }
 }

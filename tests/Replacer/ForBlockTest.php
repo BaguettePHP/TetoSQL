@@ -6,6 +6,7 @@ use DomainException;
 use OutOfRangeException;
 use Teto\SQL\QueryBuilder;
 use Teto\SQL\DummyPDO;
+use Teto\SQL\Processor\PregCallbackReplacer;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
@@ -20,14 +21,14 @@ final class ForBlockTest extends TestCase
     use ExpectException;
     use ExpectPHPException;
 
-    /** @var ForBlock */
+    /** @var PregCallbackReplacer */
     private $subject;
 
     public function set_up()
     {
         $placeholder_replacer = new Placeholder();
-        $this->subject = new ForBlock([
-            $placeholder_replacer
+        $this->subject = new PregCallbackReplacer([
+            new ForBlock([new PregCallbackReplacer([$placeholder_replacer])])
         ]);
     }
 
@@ -77,13 +78,10 @@ Rest';
                         [':a' => 'A3', ':b' => 'B3'],
                     ]
                 ],
-                '    @A1@ - @B1@
-    @A2@ - @B2@
-    @A3@ - @B3@
-',
+                '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
             ],
             [
-                '%for :arr :a@string - :b@string %endfor',
+                '%for :arr  :a@string - :b@string  %endfor',
                 [
                     ':arr' => [
                         [':a' => 'A1', ':b' => 'B1'],
@@ -91,13 +89,10 @@ Rest';
                         [':a' => 'A3', ':b' => 'B3'],
                     ]
                 ],
-                ' @A1@ - @B1@
- @A2@ - @B2@
- @A3@ - @B3@
-',
+                '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
             ],
             [
-                '%for[] :arr  :a@string - :b@string %endfor ',
+                '%for[] :arr  :a@string - :b@string  %endfor ',
                 [
                     ':arr' => [
                         [':a' => 'A1', ':b' => 'B1'],
@@ -105,10 +100,18 @@ Rest';
                         [':a' => 'A3', ':b' => 'B3'],
                     ]
                 ],
-                ' @A1@ - @B1@
- @A2@ - @B2@
- @A3@ - @B3@
-',
+                '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
+            ],
+            [
+                '%for[,] :arr  :a@string - :b@string  %endfor ',
+                [
+                    ':arr' => [
+                        [':a' => 'A1', ':b' => 'B1'],
+                        [':a' => 'A2', ':b' => 'B2'],
+                        [':a' => 'A3', ':b' => 'B3'],
+                    ]
+                ],
+                '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
             ],
         ];
     }
@@ -159,7 +162,7 @@ Rest';
                     ]
                 ],
                 [
-                    'class' => get_class(new OutOfRangeException),
+                    'class' => get_class(new OutOfRangeException()),
                     'message' => 'param ":b" expected but not assigned',
                 ]
             ],
