@@ -114,9 +114,9 @@ SQL
                 [
                     ':id' => 12345,
                     ':values' => [
-                        [':id' => 0, ':name' => 'hoge'],
-                        [':id' => 1, ':name' => 'fuga'],
-                        [':id' => 2, ':name' => 'piyo'],
+                        ['id' => 0, 'name' => 'hoge'],
+                        ['id' => 1, 'name' => 'fuga'],
+                        ['id' => 2, 'name' => 'piyo'],
                     ],
                 ],
                 'INSERT INTO hoge VALUES(0, @hoge@),(1, @fuga@),(2, @piyo@)',
