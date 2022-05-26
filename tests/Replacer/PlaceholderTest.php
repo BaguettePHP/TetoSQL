@@ -1,21 +1,30 @@
 <?php
 
-namespace Teto\SQL\Query;
+namespace Teto\SQL\Replacer;
 
-use Teto\SQL\Query;
 use Teto\SQL\DummyPDO;
+use Teto\SQL\QueryBuilder;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * @author    USAMI Kenta <tadsan@zonu.me>
  * @copyright 2019 USAMI Kenta
  * @license   https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
  */
-final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
+final class ReplaceHolderTest extends TestCase
 {
     use ExpectException;
     use ExpectPHPException;
+
+    /** @var Placeholder */
+    private $subject;
+
+    public function set_up()
+    {
+        $this->subject = new Placeholder();
+    }
 
     /**
      * @dataProvider acceptDataProvider
@@ -28,9 +37,7 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
     {
         $pdo = new DummyPDO();
 
-        $actual = call_user_func(\Closure::bind(function () use ($pdo, $type, $input) {
-            return Query::replaceHolder($pdo, ':key', "@{$type}", $input, $bind_values);
-        }, null, 'Teto\SQL\Query'));
+        $actual = $this->subject->replaceHolder($pdo, ':key', "@{$type}", $input, $bind_values);;
 
         $this->assertSame($expected, $actual);
     }
@@ -78,9 +85,7 @@ final class ReplaceHolderTest extends \PHPUnit\Framework\TestCase
         $this->expectException('DomainException');
         $this->expectExceptionMessage($expected_message);
 
-        call_user_func(\Closure::bind(function () use ($pdo, $type, $input) {
-            return Query::replaceHolder($pdo, ':key', $type, $input, $bind_values);
-        }, null, 'Teto\SQL\Query'));
+        $this->subject->replaceHolder($pdo, ':key', $type, $input, $bind_values);
     }
 
     /**

@@ -37,20 +37,25 @@ Syntax
 
 ``` php
 <?php
-namespace MyApp;
-use Teto\SQL;
 
-const find = '
- SELECT * FROM `users`
- WHERE `status` IN (:statuses@int[])
- LIMIT :offset@int, :limit@int
-';
-$conn = new \PDO('sqlite:/tmp/db.sq3', null, null, [PDO::ATTR_PERSISTENT => true]);
-$data = Query::execute($conn, find, [
-    ':statuses' => [1, 3],
-    ':offset'   => 60,
-    ':limit'    => 30,
-])->fetch(\PDO::FETCH_ASSOC);
+namespace MyApp;
+
+use Teto\SQL\Query;
+
+$conn = new \PDO('sqlite:/tmp/db.sq3', null, null, [\PDO::ATTR_PERSISTENT => true]);
+$data = Query::execute(
+    $conn,
+    <<<'SQL'
+        SELECT * FROM `users`
+        WHERE `status` IN (:statuses@int[])
+        LIMIT :offset@int, :limit@int
+    SQL,
+    [
+        ':statuses' => [1, 3],
+        ':offset'   => 60,
+        ':limit'    => 30,
+    ]
+)->fetch(\PDO::FETCH_ASSOC);
 ```
 
 Copyright
