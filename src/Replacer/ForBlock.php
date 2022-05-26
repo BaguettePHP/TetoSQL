@@ -15,9 +15,11 @@ use DomainException;
  */
 class ForBlock implements ReplacerInterface
 {
-    const FOR_PATTERN = '(?:^|\s)%for\s*(?:\[(?<forGlue>[^\]]*)\])?\s+(?<forName>:[a-zA-Z0-9_]+\s) # first line
-(?<forBlock>\s[\s\S]*?)\s # block, includes %else
-(?:^|\s*)%endfor(?:\s|$) # block termination
+    const FOR_PATTERN = '(?:^|\s)%for\s* # first part
+(?:\[(?<forGlue>[^\]]*)\])?\s+ # separator, default [,]
+(?<forName>:[a-zA-Z0-9_]+\s) # # variable name to iterate
+(?<forBlock>\s[\s\S]*?)\s # block part, including %else
+(?:^|\s*)%endfor(?:\s|$) # end of block
 ';
 
     /** @phpstan-var list<ProcessorInterface> */
