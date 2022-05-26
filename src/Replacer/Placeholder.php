@@ -15,11 +15,22 @@ class Placeholder implements ReplacerInterface
     const INT64_MAX =  '9223372036854775807';
     const INT64_MIN = '-9223372036854775808';
 
-    const PATTERN = '(?<placeholderKey>:[a-zA-Z0-9_]+)(?<placeholderType>(?:@[a-zA-Z_\[\]]+)?)';
+    const PATTERN = ':(?<placeholderKey>[a-zA-Z0-9_]+)(?<placeholderType>(?:@[a-zA-Z_\[\]]+)?)';
+
+    /** @var string */
+    protected $var_prefix;
+
+    /**
+     * @param string $var_prefix An array key prefix of variables
+     */
+    public function __construct($var_prefix = ':')
+    {
+        $this->var_prefix = $var_prefix;
+    }
 
     public function replaceQuery($pdo, array $matches, array $params, array &$bind_values)
     {
-        $key  = $matches['placeholderKey'];
+        $key  = $this->var_prefix . $matches['placeholderKey'];
         $type = $matches['placeholderType'];
 
         if (!isset($params[$key])) {
