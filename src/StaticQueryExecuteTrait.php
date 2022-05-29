@@ -59,7 +59,7 @@ trait StaticQueryExecuteTrait
         $stmt = static::build($pdo, $sql, $params);
         $stmt->execute();
 
-        $id = $pdo->lastInsertId($name);
+        $id = ($name === null) ? $pdo->lastInsertId() : $pdo->lastInsertId($name);
         assert($id !== false);
 
         return $id;
