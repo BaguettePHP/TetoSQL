@@ -16,6 +16,8 @@ namespace Teto\SQL;
  * - Part of the variable name is substituted.
  *
  * @template T of \PDOStatement|PDOStatementInterface
+ * @phpstan-type teto_pdo \PDO|PDOInterface
+ * @phpstan-type teto_pdo_statement \PDOStatement|PDOStatementInterface
  */
 interface PDOInterface
 {
