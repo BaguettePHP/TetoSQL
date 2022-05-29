@@ -11,6 +11,16 @@ parameters:
 			path: src/AbstractStaticQuery.php
 
 		-
+			message: "#^Method Teto\\\\SQL\\\\Processor\\\\CallbackProcessor\\:\\:processQuery\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/Processor/CallbackProcessor.php
+
+		-
+			message: "#^Property Teto\\\\SQL\\\\Processor\\\\CallbackProcessor\\:\\:\\$callback with generic interface Teto\\\\SQL\\\\PDOInterface does not specify its types\\: T$#"
+			count: 1
+			path: src/Processor/CallbackProcessor.php
+
+		-
 			message: "#^Parameter \\#2 \\$callback of function preg_replace_callback expects callable\\(array\\<int\\|string, string\\>\\)\\: string, Closure\\(array\\)\\: int\\|string given\\.$#"
 			count: 1
 			path: src/Processor/PregCallbackReplacer.php
