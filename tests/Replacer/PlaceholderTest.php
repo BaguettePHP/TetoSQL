@@ -23,7 +23,12 @@ final class ReplaceHolderTest extends TestCase
 
     public function set_up()
     {
-        $this->subject = new Placeholder();
+        $this->subject = new Placeholder(
+            ':',
+            [
+                '@dummy' => new Sample\DummyType(),
+            ]
+        );
     }
 
     /**
@@ -68,6 +73,7 @@ final class ReplaceHolderTest extends TestCase
             ['string', '0', '@0@'],
             ['string', '', '@@'],
             ['string[]', ['', ''], '@@,@@'],
+            ['dummy', 'foo', '[foo] is a dummy value.'],
         ];
     }
 
