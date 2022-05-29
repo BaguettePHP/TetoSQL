@@ -22,7 +22,8 @@ class PgIdentifier implements TypeInterface
     public function __construct(array $type_names)
     {
         $types = [];
-        foreach (self::TYPES as $type) {
+
+        foreach (['@column', '@column[]', '@table'] as $type) {
             $key = isset($type_names[$type]) ? $type_names[$type] : $type;
             $types[$key] = $type;
         }
