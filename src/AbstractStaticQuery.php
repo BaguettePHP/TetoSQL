@@ -2,6 +2,8 @@
 
 namespace Teto\SQL;
 
+use LogicException;
+
 /**
  * Abstract static class of safer SQL query builder by TetoSQL
  *
@@ -32,5 +34,8 @@ abstract class AbstractStaticQuery
     /**
      * @return QueryBuilder
      */
-    abstract protected static function getQueryBuilder();
+    protected static function getQueryBuilder()
+    {
+        throw new LogicException('Must be implemented ' . __FUNCTION__ . ' method in ' . __CLASS__ . '.');
+    }
 }
