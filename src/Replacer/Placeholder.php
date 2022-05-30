@@ -20,12 +20,18 @@ class Placeholder implements ReplacerInterface
     /** @var string */
     protected $var_prefix;
 
+    /** @phpstan-var array<non-empty-string, \Teto\SQL\TypeInterface> */
+    protected $additional_types;
+
     /**
      * @param string $var_prefix An array key prefix of variables
+     * @phpstan-param array<non-empty-string, \Teto\SQL\TypeInterface> $additional_types
      */
-    public function __construct($var_prefix = ':')
+    public function __construct($var_prefix = ':', array $additional_types = [])
     {
+        assert(\is_string($var_prefix));
         $this->var_prefix = $var_prefix;
+        $this->additional_types = $additional_types;
     }
 
     public function replaceQuery($pdo, array $matches, array $params, array &$bind_values)
@@ -57,11 +63,15 @@ class Placeholder implements ReplacerInterface
      * @param string $key
      * @param string $type
      * @param mixed $value
-     * @param ?array<mixed> $bind_values
+     * @param array<mixed> $bind_values
      * @return string|int
      */
     public function replaceHolder($pdo, $key, $type, $value, &$bind_values)
     {
+        if (isset($this->additional_types[$type])) {
+            return $this->additional_types[$type]->escapeValue($pdo, $key, $type, $value, $bind_values);
+        }
+
         if ($type === '@ascdesc') {
             if (!\in_array($value, ['ASC', 'DESC', 'asc', 'desc'], true)) {
                 throw new \DomainException(\sprintf('param "%s" must be "ASC", "DESC", "asc" or "desc"', $key));
