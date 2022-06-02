@@ -33,6 +33,13 @@ class PgIdentifier implements TypeInterface
 
     public function escapeValue($pdo, $key, $type, $value, &$bind_values)
     {
+        if ($type === '@bool') {
+            if (\is_bool($value)) {
+                return $value ? 'true' : 'false';
+            }
+            throw new DomainException(\sprintf('param "%s" must be bool', $key));
+        }
+
         if (!isset($this->types[$type])) {
             throw new LogicException("Passed unexpected type '{$type}', please check your configuration.");
         }
