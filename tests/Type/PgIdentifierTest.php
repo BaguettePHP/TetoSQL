@@ -2,6 +2,7 @@
 
 namespace Teto\SQL\Type;
 
+use DomainException;
 use Teto\SQL\DummyPDO;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
@@ -12,6 +13,7 @@ class PgIdentifierTest extends TestCase
 
     public function set_up()
     {
+        /** @noinspection PhpMultipleClassDeclarationsInspection */
         parent::set_up();
 
         $this->subject = new PgIdentifier([]);
@@ -19,7 +21,7 @@ class PgIdentifierTest extends TestCase
 
     /**
      * @dataProvider escapeValuesProvider
-     * @phpstan-param string|array<string> $input
+     * @phpstan-param string|array<string>|bool $input
      * @param string $type
      * @param string $expected
      * @return void
@@ -33,7 +35,7 @@ class PgIdentifierTest extends TestCase
     }
 
     /**
-     * @return array<array{string|array<?string>,string,string}>
+     * @return array<array{string|array<?string>|bool,string,string}>
      */
     public function escapeValuesProvider()
     {
@@ -47,6 +49,49 @@ class PgIdentifierTest extends TestCase
             [['"foo"' => null] , '@column[]', '"foo"'],
             [['foo' => null, 'bar' => 'buz'] , '@column[]', 'foo,bar AS "buz"'],
             [['"foo"' => null, 'bar' => ''] , '@column[]', '"foo",bar'],
+            [true, '@bool', 'true'],
+            [false, '@bool', 'false'],
+        ];
+    }
+
+    /**
+     * @dataProvider escapeValuesUnexpectedValuesProvider
+     * @phpstan-param string|array<string> $input
+     * @param string $type
+     * @phpstan-param array{class: class-string<\Exception>, message: non-empty-string} $expected
+     * @return void
+     */
+    public function testEscapeValue_raiseError($input, $type, array $expected)
+    {
+        $this->expectException($expected['class']);
+        $this->expectExceptionMessage($expected['message']);
+
+        $pdo = new DummyPDO();
+        $bind_values = [];
+        $_ = $this->subject->escapeValue($pdo, ':key', $type,  $input, $bind_values);
+    }
+
+    /**
+     * @return array<array{mixed, string, array{class: class-string<\Exception>, message: non-empty-string}}>
+     */
+    public function escapeValuesUnexpectedValuesProvider()
+    {
+        /** @phpstan-var class-string<DomainException> $DomainException */
+        $DomainException = 'DomainException';
+
+        return [
+            [1, '@bool', ['class' => $DomainException, 'message' => 'param ":key" must be bool']],
+            ['', '@bool', ['class' => $DomainException, 'message' => 'param ":key" must be bool']],
+            [null, '@bool', ['class' => $DomainException, 'message' => 'param ":key" must be bool']],
+            ['true', '@bool', ['class' => $DomainException, 'message' => 'param ":key" must be bool']],
+            [
+                ['"foo"' => null, 'bar' => ''],
+                '@table',
+                [
+                    'class' => $DomainException,
+                    'message' => "Passed unexpected \$value as type '@table'. please check your query and parameters.",
+                ],
+            ],
         ];
     }
 
