@@ -35,7 +35,7 @@ class PgIdentifier implements TypeInterface
     {
         if ($type === '@bool') {
             if (\is_bool($value)) {
-                return $value ? 'true' : 'false';
+                return $value ? 'TRUE' : 'FALSE';
             }
             throw new DomainException(\sprintf('param "%s" must be bool', $key));
         }
