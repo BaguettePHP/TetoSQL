@@ -49,8 +49,8 @@ class PgIdentifierTest extends TestCase
             [['"foo"' => null] , '@column[]', '"foo"'],
             [['foo' => null, 'bar' => 'buz'] , '@column[]', 'foo,bar AS "buz"'],
             [['"foo"' => null, 'bar' => ''] , '@column[]', '"foo",bar'],
-            [true, '@bool', 'true'],
-            [false, '@bool', 'false'],
+            [true, '@bool', 'TRUE'],
+            [false, '@bool', 'FALSE'],
         ];
     }
 
