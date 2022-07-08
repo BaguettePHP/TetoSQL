@@ -29,33 +29,3 @@ parameters:
 			message: "#^Parameter \\#2 \\$matches of method Teto\\\\SQL\\\\ReplacerInterface\\:\\:replaceQuery\\(\\) expects array\\<non\\-empty\\-string, string\\>, array\\<int\\|string, string\\> given\\.$#"
 			count: 1
 			path: src/Processor/PregCallbackReplacer.php
-
-		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Type/PgIdentifier.php
-
-		-
-			message: "#^Method Teto\\\\SQL\\\\Type\\\\PgIdentifier\\:\\:escapeValue\\(\\) should return int\\|string but return statement is missing\\.$#"
-			count: 1
-			path: src/Type/PgIdentifier.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of method Teto\\\\SQL\\\\Type\\\\PgIdentifier\\:\\:quote\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Type/PgIdentifier.php
-
-		-
-			message: "#^Property Teto\\\\SQL\\\\Type\\\\PgIdentifier\\:\\:\\$types has no type specified\\.$#"
-			count: 1
-			path: src/Type/PgIdentifier.php
-
-		-
-			message: "#^Part \\$value \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: tests/Replacer/Sample/DummyType.php
-
-		-
-			message: "#^Method Teto\\\\SQL\\\\Type\\\\PgIdentifierTest\\:\\:escapeValuesProvider\\(\\) should return array\\<array\\{string, string\\}\\> but returns array\\{array\\{'', '@column', '\"\"'\\}, array\\{array\\{'foo'\\}, '@column\\[\\]', '\"foo\"'\\}, array\\{array\\{'foo', 'bar'\\}, '@column\\[\\]', '\"foo\",\"bar\"'\\}, array\\{array\\{foo\\: 'bar'\\}, '@column\\[\\]', 'foo AS \"bar\"'\\}, array\\{array\\{'\"foo\"'\\: 'bar'\\}, '@column\\[\\]', '\"foo\" AS \"bar\"'\\}, array\\{array\\{foo\\: null\\}, '@column\\[\\]', 'foo'\\}, array\\{array\\{'\"foo\"'\\: null\\}, '@column\\[\\]', '\"foo\"'\\}, array\\{array\\{foo\\: null, bar\\: 'buz'\\}, '@column\\[\\]', 'foo,bar AS \"buz\"'\\}, \\.\\.\\.\\}\\.$#"
-			count: 1
-			path: tests/Type/PgIdentifierTest.php
