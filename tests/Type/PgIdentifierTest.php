@@ -41,6 +41,11 @@ class PgIdentifierTest extends TestCase
     {
         return [
             ['' , '@column', '""'],
+            ['abc' , '@column', '"abc"'],
+            ['ABC' , '@column', '"ABC"'],
+            ['ABC\\ABC\'' , '@column', '"ABC\\ABC\'"'],
+            ['ABC"ABC' , '@column', '"ABC""ABC"'],
+            ['ABC"""ABC' , '@column', '"ABC""""""ABC"'],
             [['foo'] , '@column[]', '"foo"'],
             [['foo','bar'] , '@column[]', '"foo","bar"'],
             [['foo' => 'bar'] , '@column[]', 'foo AS "bar"'],
