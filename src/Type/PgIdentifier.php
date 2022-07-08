@@ -94,9 +94,11 @@ class PgIdentifier implements TypeInterface
     /**
      * @phpstan-param string $value
      * @phpstan-return non-empty-string
+     * @see https://github.com/postgres/postgres/blob/REL9_0_STABLE/src/interfaces/libpq/fe-exec.c#L3165-L3169
+     * @see https://github.com/postgres/postgres/blob/REL_15_STABLE/src/interfaces/libpq/fe-exec.c#L4216-L4220
      */
     public function quote($value)
     {
-        return '"' . $value . '"';
+        return '"' . \strtr($value, ['"' => '""']) . '"';
     }
 }
