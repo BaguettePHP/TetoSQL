@@ -121,7 +121,7 @@ class Placeholder implements ReplacerInterface
                 throw new \LogicException('Validation Error.');
             }
 
-            if ($value !== '0' && !\preg_match('/\A(?:-?[1-9][0-9]*)(?:,-?[1-9][0-9]*)*\z/', $valuesString)) {
+            if ($valuesString !== '0' && !\preg_match('/\A(?:-?[1-9][0-9]*|0)(?:,(?:-?[1-9][0-9]*|0))*\z/', $valuesString)) {
                 throw new \DomainException(\sprintf('param "%s" must be int array', $key));
             }
 
