@@ -207,5 +207,5 @@ interface PDOStatementInterface
      * @param ?array<mixed> $ctorargs
      * @return bool              TRUE on success or FALSE on failure.
      */
-    public function setFetchMode($mode, $colno_or_classname_or_object, array $ctorargs = null);
+    public function setFetchMode($mode, $colno_or_classname_or_object, ?array $ctorargs = null);
 }

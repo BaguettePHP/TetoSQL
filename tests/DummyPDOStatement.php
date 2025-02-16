@@ -125,7 +125,7 @@ final class DummyPDOStatement implements PDOStatementInterface
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function setFetchMode($mode, $colno_or_classname_or_object, array $ctorargs = null)
+    public function setFetchMode($mode, $colno_or_classname_or_object, ?array $ctorargs = null)
     {
         throw new BadMethodCallException('Unexpected method call');
     }
