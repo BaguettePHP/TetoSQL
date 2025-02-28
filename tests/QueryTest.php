@@ -59,6 +59,20 @@ SQL
 SELECT foo, bar, buz
 FROM hoge
 WHERE id = :id@int
+AND name = :name@string
+SQL
+,
+                [
+                    ':id' => 12345,
+                    ':name' => ':P?/123',
+                ],
+                "SELECT foo, bar, buz FROM hoge WHERE id = 12345 AND name = @:P?/123@",
+            ],
+            [
+                <<<'SQL'
+SELECT foo, bar, buz
+FROM hoge
+WHERE id = :id@int
 %if :order
   ORDER BY id ASC
 %endif
