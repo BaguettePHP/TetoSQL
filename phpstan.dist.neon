@@ -5,3 +5,5 @@ parameters:
     - tests/
   bootstrapFiles:
     - vendor/autoload.php
+includes:
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
