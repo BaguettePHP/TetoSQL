@@ -11,121 +11,116 @@ use BadMethodCallException;
  */
 final class DummyPDOStatement implements PDOStatementInterface
 {
-    /** @var string */
-    private $queryString;
+    private string $queryString;
     /** @var array<mixed> */
-    private $driverOptions;
+    private array $driverOptions;
 
     /**
      * @param string $query
      * @param array<mixed> $driver_options
      */
-    public function __construct($query, array $driver_options = array())
+    public function __construct(string $query, array $driver_options = [])
     {
         $this->queryString = $query;
         $this->driverOptions = $driver_options;
     }
 
-    /**
-     * @param string $name
-     * @return mixed
-     */
-    public function __get($name)
+    public function __get(string $name): mixed
     {
         return $this->$name;
     }
 
-    public function bindColumn($column, &$param, $type = null, $maxlen = null, $driverdata = null)
+    public function bindColumn(int|string $column, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = 0, mixed $driverOptions = null): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function bindParam($parameter, &$variable, $data_type = \PDO::PARAM_STR, $length = null, $driver_options = null)
+    public function bindParam(int|string $param, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = 0, mixed $driverOptions = null): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function bindValue($parameter, $value, $data_type = \PDO::PARAM_STR)
+    public function bindValue(int|string $param, mixed $value, int $type = \PDO::PARAM_STR): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function closeCursor()
+    public function closeCursor(): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function columnCount()
+    public function columnCount(): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function debugDumpParams()
+    public function debugDumpParams(): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function errorCode()
+    public function errorCode(): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function errorInfo()
+    public function errorInfo(): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function execute($input_parameters)
+    public function execute(?array $params = null): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function fetch($fetch_style = \PDO::ATTR_DEFAULT_FETCH_MODE, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = 0)
+    public function fetch(int $mode = \PDO::FETCH_DEFAULT, int $cursorOrientation = \PDO::FETCH_ORI_NEXT, int $cursorOffset = 0): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function fetchAll($fetch_style, $fetch_argument = null, $ctor_args = array())
+    public function fetchAll(int $mode = \PDO::FETCH_DEFAULT, mixed $args = null, array $ctor_args = []): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function fetchColumn($column_number = 0)
+    public function fetchColumn(int $column = 0): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function fetchObject($class_name = 'stdClass', $ctor_args = array())
+    public function fetchObject(?string $class = 'stdClass', array $constructorArgs = []): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function getAttribute($attribute)
+    public function getAttribute(int $name): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function getColumnMeta($column)
+    public function getColumnMeta(int $column): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function nextRowset()
+    public function nextRowset(): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function rowCount()
+    public function rowCount(): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function setAttribute($attribute, $value)
+    public function setAttribute(int $attribute, mixed $value): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function setFetchMode($mode, $colno_or_classname_or_object, array $ctorargs = null)
+    public function setFetchMode(int $mode, $colno_or_classname_or_object = null, ?array $ctorargs = null): never
     {
         throw new BadMethodCallException('Unexpected method call');
     }
