@@ -30,13 +30,23 @@ final class DummyPDOStatement implements PDOStatementInterface
         return $this->$name;
     }
 
-    public function bindColumn(int|string $column, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = 0, mixed $driverOptions = null): never
-    {
+    public function bindColumn(
+        int|string $column,
+        mixed &$var,
+        int $type = \PDO::PARAM_STR,
+        int $maxLength = 0,
+        mixed $driverOptions = null,
+    ): never {
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function bindParam(int|string $param, mixed &$var, int $type = \PDO::PARAM_STR, int $maxLength = 0, mixed $driverOptions = null): never
-    {
+    public function bindParam(
+        int|string $param,
+        mixed &$var,
+        int $type = \PDO::PARAM_STR,
+        int $maxLength = 0,
+        mixed $driverOptions = null,
+    ): never {
         throw new BadMethodCallException('Unexpected method call');
     }
 
@@ -75,8 +85,11 @@ final class DummyPDOStatement implements PDOStatementInterface
         throw new BadMethodCallException('Unexpected method call');
     }
 
-    public function fetch(int $mode = \PDO::FETCH_DEFAULT, int $cursorOrientation = \PDO::FETCH_ORI_NEXT, int $cursorOffset = 0): never
-    {
+    public function fetch(
+        int $mode = \PDO::FETCH_DEFAULT,
+        int $cursorOrientation = \PDO::FETCH_ORI_NEXT,
+        int $cursorOffset = 0,
+    ): never {
         throw new BadMethodCallException('Unexpected method call');
     }
 

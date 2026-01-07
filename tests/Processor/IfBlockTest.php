@@ -2,11 +2,9 @@
 
 namespace Teto\SQL\Processor;
 
-use Teto\SQL\QueryBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Teto\SQL\DummyPDO;
-use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
-use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
-use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * @author    USAMI Kenta <tadsan@zonu.me>
@@ -15,13 +13,9 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
  */
 final class IfBlockTest extends TestCase
 {
-    use ExpectException;
-    use ExpectPHPException;
+    private IfBlock $subject;
 
-    /** @var IfBlock */
-    private $subject;
-
-    public function set_up()
+    public function setUp(): void
     {
         $this->subject = new IfBlock();
     }
@@ -31,9 +25,9 @@ final class IfBlockTest extends TestCase
      * @param string $input
      * @phpstan-param array<non-empty-string,mixed> $params
      * @param string $expected
-     * @return void
      */
-    public function test_accept($input, array $params, $expected)
+    #[DataProvider('acceptDataProvider')]
+    public function test_accept($input, array $params, $expected): void
     {
         $pdo = new DummyPDO();
 
@@ -47,7 +41,7 @@ final class IfBlockTest extends TestCase
     /**
      * @phpstan-return iterable<array{string, array<non-empty-string, mixed>, string}>
      */
-    public function acceptDataProvider()
+    public static function acceptDataProvider()
     {
         $query_has_if = '%if :cond
   Then!
@@ -84,10 +78,14 @@ Rest';
 
         return [
             [
-                'No condition', [], 'No condition',
+                'No condition',
+                [],
+                'No condition',
             ],
             [
-                '"%if :cond" in literal', [], '"%if :cond" in literal',
+                '"%if :cond" in literal',
+                [],
+                '"%if :cond" in literal',
             ],
             [
                 $query_has_if,
@@ -102,7 +100,7 @@ Rest';
             [
                 $query_has_if_single_line,
                 [':cond' => false],
-                " Rest",
+                ' Rest',
             ],
             [
                 $query_has_if_else,
@@ -112,7 +110,7 @@ Rest';
             [
                 $query_has_if_else_single_line,
                 [':cond' => false],
-                "Else! Rest",
+                'Else! Rest',
             ],
             [
                 implode("\n", [$query_has_if_else, $query_has_if_else]),
@@ -149,7 +147,6 @@ Rest';
                 [':cond' => false],
                 "\nRest",
             ],
-
         ];
     }
 
@@ -158,9 +155,9 @@ Rest';
      * @param string $input
      * @phpstan-param array<non-empty-string,mixed> $params
      * @param string $expected_message
-     * @return void
      */
-    public function test_raise_exception($input, array $params, $expected_message)
+    #[DataProvider('rejeceptDataProvider')]
+    public function test_raise_exception($input, array $params, $expected_message): void
     {
         $pdo = new DummyPDO();
 
@@ -174,7 +171,7 @@ Rest';
     /**
      * @return iterable<array{string, mixed, string}>
      */
-    public function rejeceptDataProvider()
+    public static function rejeceptDataProvider()
     {
         return [
             [

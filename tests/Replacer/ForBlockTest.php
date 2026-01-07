@@ -4,12 +4,10 @@ namespace Teto\SQL\Replacer;
 
 use DomainException;
 use OutOfRangeException;
-use Teto\SQL\QueryBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Teto\SQL\DummyPDO;
 use Teto\SQL\Processor\PregCallbackReplacer;
-use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
-use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
-use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * @author    USAMI Kenta <tadsan@zonu.me>
@@ -18,28 +16,24 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
  */
 final class ForBlockTest extends TestCase
 {
-    use ExpectException;
-    use ExpectPHPException;
+    private PregCallbackReplacer $subject;
 
-    /** @var PregCallbackReplacer */
-    private $subject;
-
-    public function set_up()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $placeholder_replacer = new Placeholder();
         $this->subject = new PregCallbackReplacer([
-            new ForBlock([new PregCallbackReplacer([$placeholder_replacer])])
+            new ForBlock([new PregCallbackReplacer([$placeholder_replacer])]),
         ]);
     }
 
     /**
      * @dataProvider acceptDataProvider
-     * @param string $input
      * @phpstan-param array<non-empty-string,mixed> $params
-     * @param string $expected
-     * @return void
      */
-    public function test_accept($input, array $params, $expected)
+    #[DataProvider('acceptDataProvider')]
+    public function test_accept(string $input, array $params, string $expected): void
     {
         $pdo = new DummyPDO();
 
@@ -53,7 +47,7 @@ final class ForBlockTest extends TestCase
     /**
      * @phpstan-return iterable<array{string, array<non-empty-string, mixed>, string}>
      */
-    public function acceptDataProvider()
+    public static function acceptDataProvider()
     {
         $query_has_if = '%for :arr
   Then!
@@ -62,10 +56,14 @@ Rest';
 
         return [
             [
-                'No collection', [], 'No collection',
+                'No collection',
+                [],
+                'No collection',
             ],
             [
-                '"%for :arr" in literal', [], '"%for :arr" in literal',
+                '"%for :arr" in literal',
+                [],
+                '"%for :arr" in literal',
             ],
             [
                 '%for :arr
@@ -76,7 +74,7 @@ Rest';
                         [':a' => 'A1', ':b' => 'B1'],
                         [':a' => 'A2', ':b' => 'B2'],
                         [':a' => 'A3', ':b' => 'B3'],
-                    ]
+                    ],
                 ],
                 '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
             ],
@@ -87,7 +85,7 @@ Rest';
                         [':a' => 'A1', ':b' => 'B1'],
                         [':a' => 'A2', ':b' => 'B2'],
                         [':a' => 'A3', ':b' => 'B3'],
-                    ]
+                    ],
                 ],
                 '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
             ],
@@ -98,7 +96,7 @@ Rest';
                         [':a' => 'A1', ':b' => 'B1'],
                         [':a' => 'A2', ':b' => 'B2'],
                         [':a' => 'A3', ':b' => 'B3'],
-                    ]
+                    ],
                 ],
                 '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
             ],
@@ -109,7 +107,7 @@ Rest';
                         [':a' => 'A1', ':b' => 'B1'],
                         [':a' => 'A2', ':b' => 'B2'],
                         [':a' => 'A3', ':b' => 'B3'],
-                    ]
+                    ],
                 ],
                 '@A1@ - @B1@,@A2@ - @B2@,@A3@ - @B3@',
             ],
@@ -118,12 +116,11 @@ Rest';
 
     /**
      * @dataProvider rejeceptDataProvider
-     * @param string $input
      * @phpstan-param array<non-empty-string,mixed> $params
      * @phpstan-param array{class: class-string<\Exception>, message: string} $expected
-     * @return void
      */
-    public function test_raise_exception($input, array $params, array $expected)
+    #[DataProvider('rejeceptDataProvider')]
+    public function test_raise_exception(string $input, array $params, array $expected): void
     {
         $pdo = new DummyPDO();
 
@@ -131,13 +128,13 @@ Rest';
         $this->expectExceptionMessage($expected['message']);
 
         $bind_values = [];
-        $actual = $this->subject->processQuery($pdo, $input, $params, $bind_values);
+        $_ = $this->subject->processQuery($pdo, $input, $params, $bind_values);
     }
 
     /**
      * @return iterable<array{string, array<mixed>, array{class: class-string<\Exception>, message: string}}>
      */
-    public function rejeceptDataProvider()
+    public static function rejeceptDataProvider()
     {
         return [
             [
@@ -148,7 +145,7 @@ Rest';
                 [
                     'class' => get_class(new DomainException()),
                     'message' => 'Must be assigned parameter :arr.',
-                ]
+                ],
             ],
             [
                 '%for :arr
@@ -159,12 +156,12 @@ Rest';
                         [':a' => 'A1', ':b' => 'B1'],
                         [':a' => 'A2'],
                         [':a' => 'A3', ':b' => 'B3'],
-                    ]
+                    ],
                 ],
                 [
                     'class' => get_class(new OutOfRangeException()),
                     'message' => 'param ":b" expected but not assigned',
-                ]
+                ],
             ],
         ];
     }

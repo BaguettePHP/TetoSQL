@@ -2,17 +2,17 @@
 
 namespace Teto\SQL\SQLite;
 
+use PDO;
+use PHPUnit\Framework\TestCase;
 use Teto\SQL\Query;
-use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 final class QueryTest extends TestCase
 {
-    /** @var \PDO */
-    private $pdo;
+    private PDO $pdo;
 
-    public function set_up()
+    public function setUp(): void
     {
-        parent::set_up();
+        parent::setUp();
 
         $pdo = $this->getPDO();
         $pdo->exec(self::DROP_TABLE);
@@ -35,7 +35,7 @@ CREATE TABLE `books` (
      */
     public function getPDO()
     {
-        if ($this->pdo === null) {
+        if (!isset($this->pdo)) {
             $dsn = 'sqlite:/' . __DIR__ . '/db.sq3';
             $this->pdo = new \PDO($dsn, null, null, [\PDO::ATTR_PERSISTENT => true]);
         }
@@ -43,16 +43,13 @@ CREATE TABLE `books` (
         return $this->pdo;
     }
 
-    /**
-     * @return void
-     */
-    public function test()
+    public function test(): void
     {
         $pdo = $this->getPDO();
 
         $img_file = dirname(__DIR__) . '/fuji36_01.jpg';
         $id = Query::executeAndReturnInsertId($pdo, self::INSERT, [
-            ':name'  => 'Thirty-six Views of Mount Fuji',
+            ':name' => 'Thirty-six Views of Mount Fuji',
             ':cover' => fopen($img_file, 'rb'),
         ]);
 
