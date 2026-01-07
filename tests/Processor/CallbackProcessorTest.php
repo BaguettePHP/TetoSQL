@@ -2,15 +2,12 @@
 
 namespace Teto\SQL\Processor;
 
+use PHPUnit\Framework\TestCase;
 use Teto\SQL\DummyPDO;
-use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 class CallbackProcessorTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function test()
+    public function test(): void
     {
         $pdo = new DummyPDO();
 

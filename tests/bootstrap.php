@@ -1,4 +1,5 @@
 <?php
+
 /**
  * bootstrap.php
  *
@@ -8,5 +9,3 @@
  * @license   https://github.com/BaguettePHP/TetoSQL/blob/master/LICENSE MPL-2.0
  */
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-
-error_reporting(E_ALL | E_STRICT);

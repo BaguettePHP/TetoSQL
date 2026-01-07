@@ -2,7 +2,8 @@
 
 namespace Teto\SQL;
 
-use Yoast\PHPUnitPolyfills\TestCases\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author    USAMI Kenta <tadsan@zonu.me>
@@ -15,10 +16,9 @@ final class QueryTest extends TestCase
      * @dataProvider queryProvider
      * @param non-empty-string $query
      * @param array<non-empty-string, mixed> $params
-     * @param string $expected
-     * @return void
      */
-    public function test($query, array $params, $expected)
+    #[DataProvider('queryProvider')]
+    public function test(string $query, array $params, string $expected): void
     {
         $pdo = new DummyPDO();
         $stmt = Query::build($pdo, $query, $params);
@@ -29,7 +29,7 @@ final class QueryTest extends TestCase
     /**
      * @return array<array{string, array<string, mixed>, string}>
      */
-    public function queryProvider()
+    public static function queryProvider()
     {
         return [
             [
@@ -44,11 +44,10 @@ final class QueryTest extends TestCase
             ],
             [
                 <<<'SQL'
-SELECT foo, bar, buz
-FROM hoge
-WHERE id = :id@int
-SQL
-,
+                SELECT foo, bar, buz
+                FROM hoge
+                WHERE id = :id@int
+                SQL,
                 [
                     ':id' => 12345,
                 ],
@@ -56,14 +55,13 @@ SQL
             ],
             [
                 <<<'SQL'
-SELECT foo, bar, buz
-FROM hoge
-WHERE id = :id@int
-%if :order
-  ORDER BY id ASC
-%endif
-SQL
-,
+                SELECT foo, bar, buz
+                FROM hoge
+                WHERE id = :id@int
+                %if :order
+                  ORDER BY id ASC
+                %endif
+                SQL,
                 [
                     ':id' => 12345,
                     ':order' => true,
@@ -72,14 +70,13 @@ SQL
             ],
             [
                 <<<'SQL'
-SELECT foo, bar, buz
-FROM hoge
-WHERE id = :id@int
-%if :order
-  ORDER BY id ASC
-%endif
-SQL
-,
+                SELECT foo, bar, buz
+                FROM hoge
+                WHERE id = :id@int
+                %if :order
+                  ORDER BY id ASC
+                %endif
+                SQL,
                 [
                     ':id' => 12345,
                     ':order' => false,
@@ -88,14 +85,13 @@ SQL
             ],
             [
                 <<<'SQL'
-SELECT foo, bar, buz
-FROM hoge
-WHERE id IN (:ids@int[])
-%if :order
-  ORDER BY id ASC
-%endif
-SQL
-,
+                SELECT foo, bar, buz
+                FROM hoge
+                WHERE id IN (:ids@int[])
+                %if :order
+                  ORDER BY id ASC
+                %endif
+                SQL,
                 [
                     ':ids' => [12345, 23456, 78901],
                     ':order' => false,
@@ -104,13 +100,12 @@ SQL
             ],
             [
                 <<<'SQL'
-INSERT INTO hoge
-VALUES
-%for[,] :values
-  (:id@int, :name@string)
-%endfor
-SQL
-,
+                INSERT INTO hoge
+                VALUES
+                %for[,] :values
+                  (:id@int, :name@string)
+                %endfor
+                SQL,
                 [
                     ':id' => 12345,
                     ':values' => [

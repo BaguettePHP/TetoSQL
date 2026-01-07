@@ -13,93 +13,82 @@ use LogicException;
  */
 final class DummyPDO implements PDOInterface
 {
-    public function beginTransaction()
+    public function beginTransaction(): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function commit()
+    public function commit(): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function errorCode()
+    public function errorCode(): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function errorInfo()
+    public function errorInfo(): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function exec($statement)
+    public function exec(string $statement): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function getAttribute($attribute)
+    public function getAttribute(int $attribute): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public static function getAvailableDrivers()
+    public static function getAvailableDrivers(): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function inTransaction()
+    public function inTransaction(): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function lastInsertId($name = null)
+    public function lastInsertId(?string $name = null): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    public function prepare($statement, $driver_options = array())
+    public function prepare(string $statement, array $options = []): DummyPDOStatement
     {
-        return new DummyPDOStatement($statement, $driver_options);
+        return new DummyPDOStatement($statement, $options);
     }
 
-    public function query($statement)
+    public function query(string $statement, ?int $mode = null, mixed ...$fetch_mode_args): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
     /**
-     * @param  string $string
-     * @param  int    $parameter_type
-     * @return string
      * @pure
      */
-    public function quote($string, $parameter_type = \PDO::PARAM_STR)
+    public function quote(string $string, int $type = \PDO::PARAM_STR): string
     {
-        if ($parameter_type === \PDO::PARAM_STR) {
+        if ($type === \PDO::PARAM_STR) {
             return '@' . strtr($string, ['@' => '@@']) . '@';
         }
-        if ($parameter_type === \PDO::PARAM_INT) {
+        if ($type === \PDO::PARAM_INT) {
             return $string;
         }
 
-        throw new LogicException("{$parameter_type} is not supported type.");
+        throw new LogicException("{$type} is not supported type.");
     }
 
-    /**
-     * @return bool
-     */
-    public function rollBack()
+    public function rollBack(): never
     {
         throw new BadMethodCallException('Not supported');
     }
 
-    /**
-     * @param int $attribute
-     * @param mixed $value
-     * @return bool
-     */
-    public function setAttribute($attribute, $value)
+    public function setAttribute(int $attribute, mixed $value): never
     {
         throw new BadMethodCallException('Not supported');
     }
