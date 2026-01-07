@@ -44,7 +44,5 @@ jobs:
         run: rm -f composer.lock
       - name: Setup Composer
         run: composer install
-      - name: Setup PHPStan
-        run: tools/.phpstan/setup
       - name: Run PHPStan analysis
-        run: tools/phpstan analyse -c phpstan-use-baseline.neon
+        run: ./vendor/bin/phpstan analyse -c phpstan-use-baseline.neon
