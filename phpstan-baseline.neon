@@ -1,31 +1,97 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Generic type Teto\\\\SQL\\\\PDOAggregate\\<PDO\\|Teto\\\\SQL\\\\PDOInterface\\<PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface\\>\\> in PHPDoc tag @param for parameter \\$pdo does not specify all template types of interface Teto\\\\SQL\\\\PDOAggregate\\: S, T$#"
+			rawMessage: 'Generic type Teto\SQL\PDOAggregate<PDO|Teto\SQL\PDOInterface<PDOStatement|Teto\SQL\PDOStatementInterface>> in PHPDoc tag @param for parameter $pdo does not specify all template types of interface Teto\SQL\PDOAggregate: S, T'
+			identifier: generics.lessTypes
 			count: 2
 			path: src/AbstractStaticQuery.php
 
 		-
-			message: "#^Type PDO\\|Teto\\\\SQL\\\\PDOInterface\\<PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface\\> in generic type Teto\\\\SQL\\\\PDOAggregate\\<PDO\\|Teto\\\\SQL\\\\PDOInterface\\<PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface\\>\\> in PHPDoc tag @param for parameter \\$pdo is not subtype of template type S of PDOStatement\\|Teto\\\\SQL\\\\PDOStatementInterface of interface Teto\\\\SQL\\\\PDOAggregate\\.$#"
+			rawMessage: Type PDO|Teto\SQL\PDOInterface<PDOStatement|Teto\SQL\PDOStatementInterface> in generic type Teto\SQL\PDOAggregate<PDO|Teto\SQL\PDOInterface<PDOStatement|Teto\SQL\PDOStatementInterface>> in PHPDoc tag @param for parameter $pdo is not subtype of template type S of PDOStatement|Teto\SQL\PDOStatementInterface of interface Teto\SQL\PDOAggregate.
+			identifier: generics.notSubtype
 			count: 2
 			path: src/AbstractStaticQuery.php
 
 		-
-			message: "#^Method Teto\\\\SQL\\\\Processor\\\\CallbackProcessor\\:\\:processQuery\\(\\) should return string but returns mixed\\.$#"
+			rawMessage: 'Interface Teto\SQL\PDOInterface has type alias teto_pdo with generic interface Teto\SQL\PDOInterface but does not specify its types: T'
+			identifier: missingType.generics
+			count: 1
+			path: src/PDOInterface.php
+
+		-
+			rawMessage: 'Method Teto\SQL\Processor\CallbackProcessor::processQuery() should return string but returns mixed.'
+			identifier: return.type
 			count: 1
 			path: src/Processor/CallbackProcessor.php
 
 		-
-			message: "#^Property Teto\\\\SQL\\\\Processor\\\\CallbackProcessor\\:\\:\\$callback with generic interface Teto\\\\SQL\\\\PDOInterface does not specify its types\\: T$#"
+			rawMessage: 'Property Teto\SQL\Processor\CallbackProcessor::$callback with generic interface Teto\SQL\PDOInterface does not specify its types: T'
+			identifier: missingType.generics
 			count: 1
 			path: src/Processor/CallbackProcessor.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function preg_replace_callback expects callable\\(array\\<int\\|string, string\\>\\)\\: string, Closure\\(array\\)\\: int\\|string given\\.$#"
+			rawMessage: 'Parameter #2 $callback of function preg_replace_callback expects callable(array<string>): string, Closure(array): (int|string) given.'
+			identifier: argument.type
 			count: 1
 			path: src/Processor/PregCallbackReplacer.php
 
 		-
-			message: "#^Parameter \\#2 \\$matches of method Teto\\\\SQL\\\\ReplacerInterface\\:\\:replaceQuery\\(\\) expects array\\<non\\-empty\\-string, string\\>, array\\<int\\|string, string\\> given\\.$#"
+			rawMessage: 'Parameter #2 $matches of method Teto\SQL\ReplacerInterface::replaceQuery() expects array<non-empty-string, string>, array<string> given.'
+			identifier: argument.type
 			count: 1
 			path: src/Processor/PregCallbackReplacer.php
+
+		-
+			rawMessage: Cannot use array destructuring on mixed.
+			identifier: offsetAccess.nonArray
+			count: 1
+			path: src/QueryBuilder.php
+
+		-
+			rawMessage: 'Parameter #3 $type of method PDOStatement::bindParam() expects int, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: src/QueryBuilder.php
+
+		-
+			rawMessage: 'Call to function assert() with true will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Replacer/Placeholder.php
+
+		-
+			rawMessage: 'Call to function is_string() with string will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Replacer/Placeholder.php
+
+		-
+			rawMessage: Cannot cast mixed to string.
+			identifier: cast.string
+			count: 1
+			path: src/Replacer/Placeholder.php
+
+		-
+			rawMessage: 'Parameter &$bind_values by-ref type of method Teto\SQL\Replacer\Placeholder::replaceQuery() expects array<non-empty-string, mixed>, array<mixed> given.'
+			identifier: parameterByRef.type
+			count: 1
+			path: src/Replacer/Placeholder.php
+
+		-
+			rawMessage: 'Strict comparison using !== between non-falsy-string and ''0'' will always evaluate to true.'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Replacer/Placeholder.php
+
+		-
+			rawMessage: 'Parameter #1 $value of method Teto\SQL\Type\PgIdentifier::quote() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: src/Type/PgIdentifier.php
+
+		-
+			rawMessage: Unreachable statement - code above always terminates.
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Type/PgIdentifier.php
